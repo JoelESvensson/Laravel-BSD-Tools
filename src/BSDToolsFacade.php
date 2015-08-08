@@ -4,7 +4,7 @@ namespace Midvinter\BSDTools;
 
 use Illuminate\Support\Facades\Facade;
 
-class TwitterFacade extends Facade {
+class BSDToolsFacade extends Facade {
     
     /**
      * Get the registered name of the component.
@@ -14,5 +14,5 @@ class TwitterFacade extends Facade {
     protected static function getFacadeAccessor() {
         return 'bsdtools';
     }
-    
+
 }
