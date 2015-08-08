@@ -1,0 +1,5 @@
+suites:
+    main:
+        namespace: BSDTools
+        psr4_prefix: BSDTools
+        src_path: app
