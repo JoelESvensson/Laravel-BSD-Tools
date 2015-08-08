@@ -8,7 +8,7 @@ return [
      */
     'ENDPOINT_URL'      => env('BSD_TOOLS_ENDPOINT_URL', null),
     'API_USER_ID'       => env('BSD_TOOLS_API_USER_ID', null),
-    'API_USER_SECRET'   => env('BSD_TOOLS_API_USER_SECRET', null)
+    'API_USER_SECRET'   => env('BSD_TOOLS_API_USER_SECRET', null),
 
     /**
      * These config variables are optional
