@@ -26,8 +26,8 @@ class BSDTools extends BSDToolsClient {
             }
         }
         parent::__construct(
-            $config[$mandatoryNames[2]],
             $config[$mandatoryNames[1]],
+            $config[$mandatoryNames[2]],
             $config[$mandatoryNames[0]]
         );
         $optionNames = [
