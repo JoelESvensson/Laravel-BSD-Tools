@@ -12,7 +12,7 @@ class BSDToolsFacade extends Facade {
      * @return string
      */
     protected static function getFacadeAccessor() {
-        return 'bsdtools';
+        return BSDTools::class;
     }
 
 }

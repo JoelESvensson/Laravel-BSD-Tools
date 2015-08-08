@@ -45,7 +45,7 @@ class BSDToolsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['bsdtools'];
+        return [BSDTools::class];
     }
 
 }
