@@ -4,6 +4,7 @@ namespace Midvinter\BSDTools;
 
 use Blue\Tools\Api\Client as BSDToolsClient;
 use InvalidArgumentException;
+use ReflectionObject;
 
 class BSDTools extends BSDToolsClient {
 
@@ -40,6 +41,27 @@ class BSDTools extends BSDToolsClient {
                 $this->{'set' . ucfirst($optionName)}($option[$optionName]);
             }
         }
+    }
+
+    /**
+     * @return string The endpoint url
+     */
+    public function getBaseUrl() {
+        $reflection = new ReflectionObject($this);
+        $reflection = $reflection->getParentClass()->getProperty('baseUrl');
+        $reflection->setAccessible(true);
+        $baseUrl = $this->baseUrl;
+        $reflection->setAccessible(false);
+        return $baseUrl;
+    }
+
+    /**
+     * @param   int The Id of the signup
+     * @return  int Number of signups in the signup
+     */
+    public function signupCount($signupId) {
+        $signupId = (int)$signupId;
+        return (int)file_get_contents($this->getBaseUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' . $signupId);
     }
 
 }

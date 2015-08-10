@@ -1,7 +1,7 @@
 {
     "name": "midvinter/bsdtools",
-    "description": "The Laravel Framework.",
-    "keywords": ["laravel", "bsd tools"],
+    "description": "The BSD Tools package for Laravel",
+    "keywords": ["laravel", "bsd tools", "bluestatedigital", "blue state digital"],
     "license": "MIT",
     "authors": [
         {
