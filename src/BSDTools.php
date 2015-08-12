@@ -4,9 +4,18 @@ namespace Midvinter\BSDTools;
 
 use Blue\Tools\Api\Client as BSDToolsClient;
 use InvalidArgumentException;
-use ReflectionObject;
 
 class BSDTools extends BSDToolsClient {
+
+    /**
+     * @var string The endpoint url. This is like the baseUrl but without
+     * the appended api path
+     */
+    private $endpointUrl;
+
+    public function getEndpointUrl() {
+        return $this->endpointUrl;
+    }
 
     /**
      * @param string $id        Api user id
@@ -31,6 +40,7 @@ class BSDTools extends BSDToolsClient {
             $config[$mandatoryNames[2]],
             $config[$mandatoryNames[0]]
         );
+        $this->endpointUrl = $config[$mandatoryNames[0]];
         $optionNames = [
             'deferredResultMaxAttempts',
             'deferredResultInterval',
@@ -44,24 +54,12 @@ class BSDTools extends BSDToolsClient {
     }
 
     /**
-     * @return string The endpoint url
-     */
-    public function getBaseUrl() {
-        $reflection = new ReflectionObject($this);
-        $reflection = $reflection->getParentClass()->getProperty('baseUrl');
-        $reflection->setAccessible(true);
-        $baseUrl = $this->baseUrl;
-        $reflection->setAccessible(false);
-        return $baseUrl;
-    }
-
-    /**
      * @param   int The Id of the signup
      * @return  int Number of signups in the signup
      */
     public function signupCount($signupId) {
         $signupId = (int)$signupId;
-        return (int)file_get_contents($this->getBaseUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' . $signupId);
+        return (int)file_get_contents($this->getEndpointUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' . $signupId);
     }
 
 }
