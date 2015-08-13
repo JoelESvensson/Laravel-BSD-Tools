@@ -62,4 +62,12 @@ class BSDTools extends BSDToolsClient {
         return (int)file_get_contents($this->getEndpointUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' . $signupId);
     }
 
+    /**
+     * @param   string $slug Slug for the signup url
+     * @return  string The full signup url
+     */
+    public function signupUrlBySlug($slug) {
+        return $this->getEndpointUrl() . '/page/s/' . $slug;
+    }
+    
 }
