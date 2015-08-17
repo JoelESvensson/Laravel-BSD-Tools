@@ -59,7 +59,10 @@ class BSDTools extends BSDToolsClient {
      */
     public function signupCount($signupId) {
         $signupId = (int)$signupId;
-        return (int)file_get_contents($this->getEndpointUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' . $signupId);
+        return (int)file_get_contents(
+            $this->getEndpointUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' .
+                $signupId
+        );
     }
 
     /**
