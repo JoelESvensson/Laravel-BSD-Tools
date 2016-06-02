@@ -2,11 +2,11 @@
 
 Install the package with composer
 
-    composer require midvinter/bsdtools
+    composer require joelesvensson\bsdtools
 
 Then add
 
-    Midvinter\BSDTools\BSDToolsServiceProvider::class
+    JoelESvensson\BsdTools\BsdToolsServiceProvider::class
 
 to your list of providers in the app.php config. When this is done you should also publish the bsdtools config file
 

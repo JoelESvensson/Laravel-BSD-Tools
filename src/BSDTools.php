@@ -1,19 +1,20 @@
 <?php
 
-namespace Midvinter\BSDTools;
+namespace JoelESvensson\LaravelBsdTools;
 
-use Blue\Tools\Api\Client as BSDToolsClient;
+use Blue\Tools\Api\Client as BsdClient;
 use InvalidArgumentException;
 
-class BSDTools extends BSDToolsClient {
-
+class BsdTools extends BSDToolsClient
+{
     /**
      * @var string The endpoint url. This is like the baseUrl but without
      * the appended api path
      */
     private $endpointUrl;
 
-    public function getEndpointUrl() {
+    public function getEndpointUrl()
+    {
         return $this->endpointUrl;
     }
 
@@ -31,7 +32,7 @@ class BSDTools extends BSDToolsClient {
         foreach ($mandatoryNames as $name) {
             if (!isset($config[$name])) {
                 throw new InvalidArgumentException(
-                    'Mandatory value with name: "' . $name . '" was not found in the configuration'
+                    "Mandatory value with name: $name was not found in the configuration"
                 );
             }
         }
@@ -57,11 +58,11 @@ class BSDTools extends BSDToolsClient {
      * @param   int The Id of the signup
      * @return  int Number of signups in the signup
      */
-    public function signupCount($signupId) {
+    public function signupCount($signupId)
+    {
         $signupId = (int)$signupId;
         return (int)file_get_contents(
-            $this->getEndpointUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' .
-                $signupId
+            $this->getEndpointUrl() . '/utils/cons_counter/signup_counter.ajax.php?signup_form_id=' . $signupId
         );
     }
 
@@ -69,8 +70,8 @@ class BSDTools extends BSDToolsClient {
      * @param   string $slug Slug for the signup url
      * @return  string The full signup url
      */
-    public function signupUrlBySlug($slug) {
+    public function signupUrlBySlug($slug)
+    {
         return $this->getEndpointUrl() . '/page/s/' . $slug;
     }
-    
 }

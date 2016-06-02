@@ -1,18 +1,18 @@
-<?php 
+<?php
 
-namespace Midvinter\BSDTools;
+namespace JoelESvensson\LaravelBsdTools;
 
 use Illuminate\Support\Facades\Facade;
 
-class BSDToolsFacade extends Facade {
-    
+class BsdToolsFacade extends Facade
+{
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor() {
-        return BSDTools::class;
+    protected static function getFacadeAccessor()
+    {
+        return BsdTools::class;
     }
-
 }

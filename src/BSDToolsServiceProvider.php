@@ -1,10 +1,10 @@
 <?php
 
-namespace Midvinter\BSDTools;
+namespace JoelESvensson\LaravelBsdTools;
 
 use Illuminate\Support\ServiceProvider;
 
-class BSDToolsServiceProvider extends ServiceProvider
+class BsdToolsServiceProvider extends ServiceProvider
 {
 
     /**
@@ -33,8 +33,8 @@ class BSDToolsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(BSDTools::class, function($app) {
-            return new BSDTools(config('bsdtools'));
+        $this->app->singleton(BsdTools::class, function ($app) {
+            return new BsdTools(config('bsdtools'));
         });
     }
 
@@ -45,7 +45,6 @@ class BSDToolsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [BSDTools::class];
+        return [BsdTools::class];
     }
-
 }

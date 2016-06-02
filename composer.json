@@ -1,5 +1,5 @@
 {
-    "name": "midvinter/bsdtools",
+    "name": "joelesvensson/laravelbsdtools",
     "description": "The BSD Tools package for Laravel",
     "keywords": ["laravel", "bsd tools", "bluestatedigital", "blue state digital"],
     "license": "MIT",
@@ -11,10 +11,10 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
-        "joelesvensson/tools-api-client": "~3.0"
+        "bluestatedigital/tools-api-client": "~3.0"
     },
     "require-dev": {
+        "laravel/framework": "5.2.*",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
@@ -22,7 +22,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Midvinter\\BSDTools\\": "src/"
+            "JoelESvensson\\LaravelBsdTools\\": "src/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/JoelESvensson/bsd-api-php"
+        }
+    ]
 }
