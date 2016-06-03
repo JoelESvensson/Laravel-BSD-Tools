@@ -2,6 +2,8 @@
 
 namespace JoelESvensson\LaravelBsdTools;
 
+use JoelESvensson\LaravelBsdTools\Api\Constituent as ConstituentApi;
+use JoelESvensson\LaravelBsdTools\Api\Email as EmailApi;
 use Illuminate\Support\ServiceProvider;
 
 class BsdToolsServiceProvider extends ServiceProvider
@@ -36,6 +38,8 @@ class BsdToolsServiceProvider extends ServiceProvider
         $this->app->singleton(BsdTools::class, function ($app) {
             return new BsdTools(config('bsdtools'));
         });
+        $this->app->singleton(EmailApi::class);
+        $this->app->singleton(ConstituentApi::class);
     }
 
     /**
@@ -45,6 +49,6 @@ class BsdToolsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [BsdTools::class];
+        return [BsdTools::class, EmailApi::class, ConstituentApi::class];
     }
 }

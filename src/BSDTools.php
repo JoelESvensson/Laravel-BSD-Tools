@@ -5,7 +5,7 @@ namespace JoelESvensson\LaravelBsdTools;
 use Blue\Tools\Api\Client as BsdClient;
 use InvalidArgumentException;
 
-class BsdTools extends BSDToolsClient
+class BsdTools extends BsdClient
 {
     /**
      * @var string The endpoint url. This is like the baseUrl but without
@@ -21,7 +21,7 @@ class BsdTools extends BSDToolsClient
     /**
      * @param string $id        Api user id
      * @param string $secret    Secret key
-     * @param string $url       Endpoint url - e.g. http://kampanj.skiftet.org
+     * @param string $url       Endpoint url - e.g. https://kampanj.skiftet.org
      * @param array  $options   An associative array with optional configuration
      *  currently supported is: 'deferredResultMaxAttempts'
      *  'deferredResultInterval' and 'logger'
