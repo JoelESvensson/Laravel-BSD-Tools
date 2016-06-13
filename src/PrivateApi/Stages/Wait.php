@@ -2,17 +2,21 @@
 
 namespace JoelESvensson\LaravelBsdTools\PrivateApi\Stages;
 
+use Illuminate\Contracts\Logging\Log;
+
 class Wait
 {
+
     private $privateApi;
-    public function __construct($privateApi)
+    private $log;
+    public function __construct($privateApi, Log $log)
     {
         $this->privateApi = $privateApi;
+        $this->log = $log;
     }
 
     public function __invoke(array $data): array
     {
-        $data['completed'] = [];
         while (!empty($data['ongoing'])) {
             sleep(5);
             foreach ($data['ongoing'] as $key => $value) {
@@ -35,14 +39,29 @@ class Wait
                     ]
                 );
                 $json = json_decode((string)$response->getBody(), true);
-                if ($json['status'] !== 'counting') {
-                    $data['completed'][$key] = $data['ongoing'][$key];
-                    unset($data['ongoing'][$key]);
-                    echo "Counted $key - $searchId - {$json['status']}\n";
+                switch ($json['status']) {
+                    case 'counting':
+                        break;
+                    case 'complete':
+                        $data['completed'][$key] = $data['ongoing'][$key];
+                        unset($data['ongoing'][$key]);
+                        $this->log->debug('Count is complete', [
+                            'date' => $key,
+                            'searchId' => $searchId,
+                        ]);
+                        break;
+                    default:
+                        unset($data['ongoing'][$key]);
+                        $this->log->warning('Count failed', [
+                            'date' => $key,
+                            'searchId' => $searchId,
+                            'status' => $json['status'],
+                        ]);
+                        break;
                 }
             }
         }
-        unset($data['ongoing']);
+
         return $data;
     }
 }

@@ -4,9 +4,13 @@ namespace JoelESvensson\LaravelBsdTools\PrivateApi\Stages;
 
 use Illuminate\Contracts\Logging\Log;
 
-class CompleteCount
+class ForceCompleteCount
 {
     private $privateApi;
+
+    /**
+     * @property Log $log
+     */
     private $log;
     public function __construct($privateApi, Log $log)
     {
@@ -16,7 +20,7 @@ class CompleteCount
 
     public function __invoke(array $data): array
     {
-        foreach ($data['completed'] as $key => $value) {
+        foreach ($data['ongoing'] as $key => $value) {
             $response = $this->privateApi->post(
                 '/utils/query_builder/admin/query_builder.ajax.php',
                 [
@@ -35,26 +39,23 @@ class CompleteCount
                 ]
             );
             $json = json_decode((string)$response->getBody(), true);
-            if (!isset($json['unique_cons'])) {
-                if (!is_string($json)) {
-                    $json = json_encode($json);
-                }
-
-                $this->log->warning('Result fetch failed', [
+            if (is_string($json)) {
+                $this->log->notice('Forced fetch failed', [
                     'date' => $key,
                     'response' => $json,
                 ]);
-                unset($data['completed'][$key]);
                 continue;
             }
-            $data['done'][$key] = $data['completed'][$key];
+
+            $data['done'][$key] = $data['ongoing'][$key];
             $data['done'][$key]['data'] = $json['unique_cons'];
-            $this->log->debug('Search result fetched', [
+            $this->log->debug('Forced search result fetched', [
                 'date' => $key,
                 'uniqueCons' => $json['unique_cons'],
             ]);
-            unset($data['completed'][$key]);
+            unset($data['ongoing'][$key]);
         }
+
         return $data;
     }
 }

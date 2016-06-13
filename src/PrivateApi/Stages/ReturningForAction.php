@@ -5,20 +5,26 @@ namespace JoelESvensson\LaravelBsdTools\PrivateApi\Stages;
 use DateTime;
 use DateInterval;
 use Carbon\CarbonInterval;
+use Illuminate\Contracts\Logging\Log;
 
 class ReturningForAction
 {
     private $privateApi;
-    public function __construct($privateApi)
+    private $log;
+    public function __construct($privateApi, Log $log)
     {
         $this->privateApi = $privateApi;
+        $this->log = $log;
     }
 
     private function data(
         DateTime $fromDate,
         DateTime $toDate
-    ) {
-        echo "{$fromDate->format('Y-m-d')} - {$toDate->format('Y-m-d')}\n";
+    ): array {
+        $this->log->debug('Creating returning for action request', [
+            'fromDate' => $fromDate->format('Y-m-d'),
+            'toDate' => $toDate->format('Y-m-d'),
+        ]);
         $options = [
             'dhc_cons_action[selected]' => '1',
             'dhc_row_counter[count]' => '1',
@@ -72,27 +78,37 @@ class ReturningForAction
     }
 
 
-    public function __invoke(array $parameters)
+    public function __invoke(array $parameters): array
     {
         $fromDate = $parameters['fromDate'];
         $toDate = $parameters['toDate'];
         $interval = $parameters['interval'];
         $toStep = clone $fromDate;
-        $data = [];
+        $data = [
+            'prepared' => [],
+            'ongoing' => [],
+            'completed' => [],
+            'done' => [],
+        ];
         for (;;) {
             $fromStep = clone $toStep;
             $toStep->add($interval);
             if ($toStep->gt($toDate)) {
-                $data[$fromStep->format('Y-m-d')] = $this->data(
-                    $fromStep,
-                    $toDate // We don't want to jump over the toDate
-                );
+                $data['prepared'][$fromStep->format('Y-m-d')] = [
+                    'data' => $this->data(
+                        $fromStep,
+                        $toDate // We don't want to jump over the toDate
+                    )
+                ];
                 break;
             }
-            $data[$fromStep->format('Y-m-d')] = $this->data(
-                $fromStep,
-                $toStep
-            );
+
+            $data['prepared'][$fromStep->format('Y-m-d')] = [
+                'data' => $this->data(
+                    $fromStep,
+                    $toStep
+                )
+            ];
         }
 
         return $data;

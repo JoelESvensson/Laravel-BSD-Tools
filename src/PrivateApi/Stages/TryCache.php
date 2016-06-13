@@ -3,26 +3,29 @@
 namespace JoelESvensson\LaravelBsdTools\PrivateApi\Stages;
 
 use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Contracts\Logging\Log;
 
 class TryCache
 {
 
     /**
-     * @param Repository $cache
+     * @property Repository $cache
      */
     private $cache;
-    public function __construct(Repository $cache)
+
+    /**
+     * @property Log $log
+     */
+
+    public function __construct(Repository $cache, Log $log)
     {
         $this->cache = $cache;
+        $this->log = $log;
     }
 
-    public function __invoke(array $counting): array
+    public function __invoke(array $data): array
     {
-        $data = [
-            'ongoing' => [],
-            'done' => [],
-        ];
-        foreach ($counting as $key => $value) {
+        foreach ($data['prepared'] as $key => $value) {
             $hashKey = hash('sha256', json_encode($value));
             $result = $this->cache->get($hashKey);
             if ($result !== null) {
@@ -31,11 +34,15 @@ class TryCache
                     'data' => $result,
                     'cached' => true,
                 ];
+                unset($data['prepared'][$key]);
+                $this->log->debug(
+                    'Cache hit',
+                    [
+                        'date' => $key,
+                    ]
+                );
             } else {
-                $data['ongoing'][$key] = [
-                    'hashKey' => $hashKey,
-                    'data' => $value
-                ];
+                $data['prepared'][$key]['hashKey'] = $hashKey;
             }
         }
 

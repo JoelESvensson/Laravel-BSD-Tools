@@ -2,12 +2,17 @@
 
 namespace JoelESvensson\LaravelBsdTools\PrivateApi\Stages;
 
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Contracts\Logging\Log;
+
 class BeginCount
 {
     private $privateApi;
-    public function __construct($privateApi)
+    private $log;
+    public function __construct($privateApi, Log $log)
     {
         $this->privateApi = $privateApi;
+        $this->log = $log;
     }
 
     private function request(array $requestData)
@@ -28,17 +33,42 @@ class BeginCount
 
     public function __invoke(array $data): array
     {
-        foreach ($data['ongoing'] as $key => $value) {
-            $json = json_decode(
-                (string)$this->request(
-                    $value['data']
-                )->getBody(),
-                true
-            );
-            $searchId = $json['search_id'];
-            unset($json);
-            $data['ongoing'][$key]['data'] = $searchId;
-            echo "$key - $searchId\n";
+        foreach ($data['prepared'] as $key => $value) {
+            try {
+                $json = json_decode(
+                    (string)$this->request(
+                        $value['data']
+                    )->getBody(),
+                    true
+                );
+                $searchId = $json['search_id'];
+                unset($json);
+                $data['ongoing'][$key] = [
+                    'data' => $searchId,
+                    'hashKey' => $value['hashKey'],
+                ];
+                unset($data['prepared'][$key]);
+                $this->log->debug(
+                    'Count has begun',
+                    [
+                        'date' => $key,
+                        'searchId' => $searchId,
+                    ]
+                );
+            } catch (RequestException $e) {
+
+                /**
+                 * This may happen. Just skip that query and move on.
+                 */
+                $thid->log->warning(
+                    'Count failed to begin',
+                    [
+                        'message' => $e->getMessage(),
+                        'date' => $key,
+                        'searchId' => $searchId,
+                    ]
+                );
+            }
         }
 
         return $data;
