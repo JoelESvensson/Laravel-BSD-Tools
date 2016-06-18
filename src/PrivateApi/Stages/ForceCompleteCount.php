@@ -47,7 +47,7 @@ class ForceCompleteCount
                 continue;
             }
 
-            $data['done'][$key] = $data['ongoing'][$key];
+            $data['done'][$key] = $value;
             $data['done'][$key]['data'] = $json['unique_cons'];
             $this->log->debug('Forced search result fetched', [
                 'date' => $key,

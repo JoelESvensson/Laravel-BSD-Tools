@@ -2,14 +2,15 @@
 
 namespace JoelESvensson\LaravelBsdTools;
 
+use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
 use JoelESvensson\LaravelBsdTools\Api\Constituent as ConstituentApi;
 use JoelESvensson\LaravelBsdTools\Api\Email as EmailApi;
-use JoelESvensson\LaravelBsdTools\PrivateApi\Client as PrivateApi;
+use JoelESvensson\LaravelBsdTools\PrivateApi\Client as PrivateApiClient;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Support\ServiceProvider;
 
-class BsdToolsServiceProvider extends ServiceProvider
+class BsdServiceProvider extends ServiceProvider
 {
 
     /**
@@ -38,13 +39,13 @@ class BsdToolsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(BsdTools::class, function ($app) {
-            return new BsdTools(config('bsdtools'));
+        $this->app->singleton(ApiClient::class, function ($app) {
+            return new ApiClient(config('bsdtools'));
         });
         $this->app->singleton(EmailApi::class);
         $this->app->singleton(ConstituentApi::class);
-        $this->app->singleton(PrivateApi::class, function ($app) {
-            return new PrivateApi(
+        $this->app->singleton(PrivateApiClient::class, function ($app) {
+            return new PrivateClientApi(
                 config('bsdtools'),
                 $app->make(Repository::class),
                 $app->make(Log::class)
@@ -60,10 +61,10 @@ class BsdToolsServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            BsdTools::class,
+            ApiClient::class,
             EmailApi::class,
             ConstituentApi::class,
-            PrivateApi::class,
+            PrivateApiClient::class,
         ];
     }
 }

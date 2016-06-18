@@ -2,14 +2,17 @@
 
 namespace JoelESvensson\LaravelBsdTools\Api;
 
-use JoelESvensson\LaravelBsdTools\BsdTools;
+use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
 
 class Email
 {
 
+    /**
+     * @var ApiClient
+     */
     private $api;
 
-    public function __construct(BsdTools $api)
+    public function __construct(ApiClient $api)
     {
         $this->api = $api;
     }

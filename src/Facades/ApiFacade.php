@@ -1,10 +1,11 @@
 <?php
 
-namespace JoelESvensson\LaravelBsdTools;
+namespace JoelESvensson\LaravelBsdTools\Facades;
 
+use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
 use Illuminate\Support\Facades\Facade;
 
-class BsdToolsFacade extends Facade
+class ApiFacade extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +14,6 @@ class BsdToolsFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return BsdTools::class;
+        return ApiClient::class;
     }
 }

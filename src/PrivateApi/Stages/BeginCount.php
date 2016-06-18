@@ -8,6 +8,10 @@ use Illuminate\Contracts\Logging\Log;
 class BeginCount
 {
     private $privateApi;
+
+    /**
+     * @var Log
+     */
     private $log;
     public function __construct($privateApi, Log $log)
     {
@@ -43,10 +47,9 @@ class BeginCount
                 );
                 $searchId = $json['search_id'];
                 unset($json);
-                $data['ongoing'][$key] = [
-                    'data' => $searchId,
-                    'hashKey' => $value['hashKey'],
-                ];
+                $data['ongoing'][$key] = $value;
+                $data['ongoing'][$key]['data'] = $searchId;
+                $data['ongoing'][$key]['hashKey'] = $value['hashKey'];
                 unset($data['prepared'][$key]);
                 $this->log->debug(
                     'Count has begun',
@@ -60,7 +63,7 @@ class BeginCount
                 /**
                  * This may happen. Just skip that query and move on.
                  */
-                $thid->log->warning(
+                $this->log->warning(
                     'Count failed to begin',
                     [
                         'message' => $e->getMessage(),

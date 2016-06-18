@@ -2,14 +2,17 @@
 
 namespace JoelESvensson\LaravelBsdTools\Api;
 
-use JoelESvensson\LaravelBsdTools\BsdTools;
+use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
 
 class Constituent
 {
 
+    /**
+     * @var ApiClient
+     */
     private $api;
 
-    public function __construct(BsdTools $api)
+    public function __construct(ApiClient $api)
     {
         $this->api = $api;
     }
@@ -48,6 +51,11 @@ class Constituent
 
         if ($options) {
             $params = array_merge($params, $options);
+            if (isset($params['bundles'])) {
+                if (is_array($options['bundles'])) {
+                    $options['bundles'] = implode(',', $options['bundles']);
+                }
+            }
         }
 
         if (isset($params['emails'])) {

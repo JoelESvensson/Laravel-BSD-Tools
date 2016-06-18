@@ -26,21 +26,17 @@ class TryCache
     public function __invoke(array $data): array
     {
         foreach ($data['prepared'] as $key => $value) {
-            $hashKey = hash('sha256', json_encode($value));
+            $hashKey = hash('sha256', json_encode($value['data']));
             $result = $this->cache->get($hashKey);
             if ($result !== null) {
-                $data['done'][$key] = [
-                    'hashKey' => $hashKey,
-                    'data' => $result,
-                    'cached' => true,
-                ];
+                $data['done'][$key] = $value;
+                $data['done'][$key]['hashKey'] = $hashKey;
+                $data['done'][$key]['data'] = $result;
+                $data['done'][$key]['cached'] = true;
                 unset($data['prepared'][$key]);
-                $this->log->debug(
-                    'Cache hit',
-                    [
-                        'date' => $key,
-                    ]
-                );
+                $this->log->debug('Cache hit', [
+                    'date' => $key,
+                ]);
             } else {
                 $data['prepared'][$key]['hashKey'] = $hashKey;
             }

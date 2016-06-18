@@ -24,14 +24,15 @@ class Cache
     public function __invoke(array $data): array
     {
         foreach ($data['done'] as $key => $value) {
-            if ($this->durationInMinutes) {
-                $this->cache->forever($value['hashkey'], $value['data']);
-            } else {
+            $cacheDuration = $value['cacheDuration'] ?? $this->durationInMinutes;
+            if ($cacheDuration) {
                 $this->cache->put(
                     $value['hashKey'],
                     $value['data'],
-                    $this->durationInMinutes
+                    $cacheDuration
                 );
+            } else {
+                $this->cache->forever($value['hashKey'], $value['data']);
             }
         }
 

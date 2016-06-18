@@ -43,7 +43,7 @@ class Wait
                     case 'counting':
                         break;
                     case 'complete':
-                        $data['completed'][$key] = $data['ongoing'][$key];
+                        $data['completed'][$key] = $value;
                         unset($data['ongoing'][$key]);
                         $this->log->debug('Count is complete', [
                             'date' => $key,

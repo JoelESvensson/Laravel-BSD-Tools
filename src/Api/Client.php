@@ -1,11 +1,12 @@
 <?php
 
-namespace JoelESvensson\LaravelBsdTools;
+namespace JoelESvensson\LaravelBsdTools\Api;
 
-use Blue\Tools\Api\Client as BsdClient;
+use Blue\Tools\Api\Client as SimpleBsdClient;
+use function GuzzleHttp\json_decode;
 use InvalidArgumentException;
 
-class BsdTools extends BsdClient
+class Client extends SimpleBsdClient
 {
     /**
      * @var string The endpoint url. This is like the baseUrl but without
@@ -73,5 +74,62 @@ class BsdTools extends BsdClient
     public function signupUrlBySlug($slug)
     {
         return $this->getEndpointUrl() . '/page/s/' . $slug;
+    }
+
+    public function get(
+        string $path,
+        array $parameters = null,
+        string $contentType = null
+    ) {
+        if ($contentType) {
+            switch ($contentType) {
+                case 'xml':
+                case 'json':
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        "contentType '$contentType' is invalid"
+                    );
+            }
+        } else {
+            $contentType = 'xml';
+        }
+
+        $response = parent::get($path, $parameters);
+        switch ($contentType) {
+            case 'xml':
+                return (string)$response->getBody();
+            case 'json':
+                return json_decode((string)$response->getBody(), true);
+        }
+    }
+
+    public function post(
+        string $path,
+        array $parameters = null,
+        array $data = null,
+        string $contentType = null
+    ) {
+        if ($contentType) {
+            switch ($contentType) {
+                case 'xml':
+                case 'json':
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        "contentType '$contentType' is invalid"
+                    );
+            }
+        } else {
+            $contentType = 'xml';
+        }
+
+        $response = parent::post($path, $parameters, $data);
+        switch ($contentType) {
+            case 'xml':
+                return (string)$response->getBody();
+            case 'json':
+                return json_decode((string)$response->getBody(), true);
+        }
     }
 }

@@ -47,7 +47,7 @@ class CompleteCount
                 unset($data['completed'][$key]);
                 continue;
             }
-            $data['done'][$key] = $data['completed'][$key];
+            $data['done'][$key] = $value;
             $data['done'][$key]['data'] = $json['unique_cons'];
             $this->log->debug('Search result fetched', [
                 'date' => $key,

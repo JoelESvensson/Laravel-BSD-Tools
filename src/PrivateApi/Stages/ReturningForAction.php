@@ -82,7 +82,7 @@ class ReturningForAction
     {
         $fromDate = $parameters['fromDate'];
         $toDate = $parameters['toDate'];
-        $interval = $parameters['interval'];
+        $interval = $parameters['interval'] ?? CarbonInterval::create(0, 0, 0, 1);
         $toStep = clone $fromDate;
         $data = [
             'prepared' => [],
@@ -98,7 +98,8 @@ class ReturningForAction
                     'data' => $this->data(
                         $fromStep,
                         $toDate // We don't want to jump over the toDate
-                    )
+                    ),
+                    'cacheDuration' => 60
                 ];
                 break;
             }
@@ -110,7 +111,7 @@ class ReturningForAction
                 )
             ];
         }
-
+        
         return $data;
     }
 }
