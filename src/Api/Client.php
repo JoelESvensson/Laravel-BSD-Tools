@@ -77,8 +77,8 @@ class Client extends SimpleBsdClient
     }
 
     public function get(
-        string $path,
-        array $parameters = null,
+        $path,
+        $parameters = [],
         string $contentType = null
     ) {
         if ($contentType) {
@@ -105,9 +105,9 @@ class Client extends SimpleBsdClient
     }
 
     public function post(
-        string $path,
-        array $parameters = null,
-        array $data = null,
+        $path,
+        $parameters = [],
+        $data = '',
         string $contentType = null
     ) {
         if ($contentType) {

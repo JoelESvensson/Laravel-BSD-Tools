@@ -25,11 +25,12 @@ class Email
     {
         if (is_string($params)) {
             $params = ['email' => $params];
-            if ($reason) {
-                $params['reason'] = $reason;
-            }
         } elseif (!is_array($params)) {
             throw new InvalidArgumentException();
+        }
+
+        if ($reason) {
+            $params['reason'] = $reason;
         }
 
         $result = $this->api->post(
@@ -48,11 +49,12 @@ class Email
     {
         if (is_string($params)) {
             $params = ['email' => $params];
-            if ($subscribed) {
-                $params['is_subscribed'] = 1;
-            }
         } elseif (!is_array($params)) {
             throw new InvalidArgumentException();
+        }
+
+        if ($subscribed) {
+            $params['is_subscribed'] = 1;
         }
 
         $result = $this->api->post(
