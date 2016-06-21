@@ -45,7 +45,7 @@ class BsdServiceProvider extends ServiceProvider
         $this->app->singleton(EmailApi::class);
         $this->app->singleton(ConstituentApi::class);
         $this->app->singleton(PrivateApiClient::class, function ($app) {
-            return new PrivateClientApi(
+            return new PrivateApiClient(
                 config('bsdtools'),
                 $app->make(Repository::class),
                 $app->make(Log::class)

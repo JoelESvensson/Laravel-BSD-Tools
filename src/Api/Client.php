@@ -79,6 +79,7 @@ class Client extends SimpleBsdClient
     public function get(
         $path,
         $parameters = [],
+        $autoresolveDeferred = true,
         string $contentType = null
     ) {
         if ($contentType) {
@@ -95,7 +96,7 @@ class Client extends SimpleBsdClient
             $contentType = 'xml';
         }
 
-        $response = parent::get($path, $parameters);
+        $response = parent::get($path, $parameters, $autoresolveDeferred);
         switch ($contentType) {
             case 'xml':
                 return (string)$response->getBody();
@@ -108,6 +109,7 @@ class Client extends SimpleBsdClient
         $path,
         $parameters = [],
         $data = '',
+        $autoresolveDeferred = true,
         string $contentType = null
     ) {
         if ($contentType) {
@@ -124,7 +126,7 @@ class Client extends SimpleBsdClient
             $contentType = 'xml';
         }
 
-        $response = parent::post($path, $parameters, $data);
+        $response = parent::post($path, $parameters, $data, $autoresolveDeferred);
         switch ($contentType) {
             case 'xml':
                 return (string)$response->getBody();

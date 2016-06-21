@@ -2,6 +2,8 @@
 
 namespace JoelESvensson\LaravelBsdTools\Api;
 
+use Blue\Tools\Api\DeferredException;
+use InvalidArgumentException;
 use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
 
 class Constituent
@@ -33,6 +35,39 @@ class Constituent
         }
 
         return $this->api->get('cons/get_constituents_by_id', $params);
+    }
+
+    /**
+     * array|string|int $consIds
+     */
+    public function delete($consIds)
+    {
+        if (is_string($consIds)) {
+            $consIds = (int) $consIds;
+        }
+
+        if (is_int($consIds)) {
+            $consIds = [$consIds];
+        }
+
+        if (!is_array($consIds)) {
+            throw new InvalidArgumentException();
+        }
+
+        try {
+            $response = $this->api->post(
+                'cons/delete_constituents_by_id',
+                [
+                    'cons_ids' => implode(',', $consIds),
+                ],
+                '',
+                false
+            );
+        } catch (DeferredException $e) {
+            $response = $e->getDeferredId();
+        }
+
+        return $response;
     }
 
     /**

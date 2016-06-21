@@ -12,6 +12,7 @@ use GuzzleHttp\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Logging\Log;
+use InvalidArgumentException;
 use JoelESvensson\LaravelBsdTools\PrivateApi\Stages\{ //@codingStandardsIgnoreLine
     BeginCount,
     Cache,
@@ -62,9 +63,17 @@ class Client
         return $this->http()->get($url, $params);
     }
 
-    public function post(string $url, array $params = null)
+    public function post(string $url, array $params = null, string $type = null)
     {
-        return $this->http()->post($url, $params);
+        switch ($type) {
+            case 'form':
+                return $this->http()->post($url, [
+                    'form_params' => $params
+                ]);
+            case 'json':
+            default:
+                return $this->http()->post($url, $params);
+        }
     }
 
     private $searchSessionKey;
@@ -81,6 +90,21 @@ class Client
         );
 
         return $this->searchSessionKey = $match[1];
+    }
+
+    public function undelete(int $consId)
+    {
+        if ($consId <= 0) {
+            throw new InvalidArgumentException();
+        }
+
+        $response = $this->post(
+            '/modules/constituent/admin/constituent_delete.php?undelete=1',
+            [
+                'cons_id' => $consId,
+            ],
+            'form'
+        );
     }
 
     public function returningForAction(
