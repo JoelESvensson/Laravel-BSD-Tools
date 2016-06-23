@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "bluestatedigital/tools-api-client": "~3.0",
+        "bluestatedigital/tools-api-client": "dev-master",
         "league/csv": "^8.1"
     },
     "require-dev": {
