@@ -14,6 +14,7 @@ use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Logging\Log;
 use InvalidArgumentException;
 use JoelESvensson\LaravelBsdTools\PrivateApi\Stages\{ //@codingStandardsIgnoreLine
+    ActiveRecurring,
     BeginCount,
     Cache,
     Callback,
@@ -105,6 +106,44 @@ class Client
             ],
             'form'
         );
+    }
+
+    public function activeRecurring()
+    {
+        return (new Pipeline)
+            ->pipe(new activeRecurring($this, $this->log))
+            ->pipe(new TryCache($this->cache, $this->log))
+            ->pipe(function (array $parameters) : array {
+                $preparedChunks = array_chunk($parameters['prepared'], 100, true);
+                $result = [
+                    'prepared' => [],
+                    'ongoing' => $parameters['ongoing'],
+                    'completed' => $parameters['completed'],
+                    'done' => $parameters['done'],
+                ];
+                foreach ($preparedChunks as $prepared) {
+                    $result = array_merge_recursive($result, (new Pipeline)
+                        ->pipe(new BeginCount($this, $this->log))
+
+                        /**
+                         * ForceCompleteCount will try to fetch the count directly
+                         * without waiting. Saves a roundtrip when doing many requests.
+                         */
+                        ->pipe(new ForceCompleteCount($this, $this->log))
+                        ->pipe(new Wait($this, $this->log))
+                        ->pipe(new CompleteCount($this, $this->log))
+                        ->pipe(new Cache($this->cache))
+                        ->process([
+                            'prepared' => $prepared,
+                            'completed' => [],
+                            'done' => [],
+                            'ongoing' => [],
+                        ]));
+                }
+
+                return $result;
+            })
+            ->process([]);
     }
 
     public function returningForAction(
