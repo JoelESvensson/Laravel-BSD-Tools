@@ -56,7 +56,7 @@ class ActiveRecurring
         ];
         $data['prepared'][] = [
             'data' => $this->data(),
-            'cacheDuration' => 10,
+            'cacheDuration' => 2,
         ];
 
         return $data;

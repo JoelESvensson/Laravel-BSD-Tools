@@ -111,7 +111,7 @@ class Client
     public function activeRecurring()
     {
         $data = (new Pipeline)
-            ->pipe(new activeRecurring($this, $this->log))
+            ->pipe(new ActiveRecurring($this, $this->log))
             ->pipe(new TryCache($this->cache, $this->log))
             ->pipe(function (array $parameters) : array {
                 $preparedChunks = array_chunk($parameters['prepared'], 100, true);
