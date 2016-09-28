@@ -110,7 +110,7 @@ class Client
 
     public function activeRecurring()
     {
-        return (new Pipeline)
+        $data = (new Pipeline)
             ->pipe(new activeRecurring($this, $this->log))
             ->pipe(new TryCache($this->cache, $this->log))
             ->pipe(function (array $parameters) : array {
@@ -144,6 +144,7 @@ class Client
                 return $result;
             })
             ->process([]);
+        return $data['done'][0]['data'];
     }
 
     public function returningForAction(
