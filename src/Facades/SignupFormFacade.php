@@ -2,7 +2,7 @@
 
 namespace JoelESvensson\LaravelBsdTools\Facades;
 
-use JoelESvensson\LaravelBsdTools\Api\Email;
+use JoelESvensson\LaravelBsdTools\Api\SignupForm;
 use Illuminate\Support\Facades\Facade;
 
 class SignupFormFacade extends Facade
