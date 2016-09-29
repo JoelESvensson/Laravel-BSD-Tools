@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace JoelESvensson\LaravelBsdTools\Api;
 
@@ -24,5 +25,10 @@ class SignupForm
     public function list()
     {
         return $this->api->get('signup/list_forms');
+    }
+
+    public function fastCount(int $id)
+    {
+        return $this->api->signupCount($id);
     }
 }
