@@ -4,6 +4,7 @@ namespace JoelESvensson\LaravelBsdTools;
 
 use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
 use JoelESvensson\LaravelBsdTools\Api\Constituent as ConstituentApi;
+use JoelESvensson\LaravelBsdTools\Api\ConstituentGroup as ConstituentGroupApi;
 use JoelESvensson\LaravelBsdTools\Api\Email as EmailApi;
 use JoelESvensson\LaravelBsdTools\PrivateApi\Client as PrivateApiClient;
 use Illuminate\Contracts\Cache\Repository;
@@ -45,6 +46,7 @@ class BsdServiceProvider extends ServiceProvider
         $this->app->singleton(EmailApi::class);
         $this->app->singleton(ConstituentApi::class);
         $this->app->singleton(SignupFormApi::class);
+        $this->app->singleton(ConstituentGroupApi::class);
         $this->app->singleton(PrivateApiClient::class, function ($app) {
             return new PrivateApiClient(
                 config('bsdtools'),
@@ -67,6 +69,7 @@ class BsdServiceProvider extends ServiceProvider
             ConstituentApi::class,
             SignupFormApi::class,
             PrivateApiClient::class,
+            ConstituentGroupApi::class,
         ];
     }
 }

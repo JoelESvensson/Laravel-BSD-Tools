@@ -18,6 +18,22 @@ class SignupForm
         $this->api = $api;
     }
 
+    private function byId(int $id)
+    {
+        return $this->api->get('signup/get_form', ['signup_form_id' => $id]);
+    }
+
+    public function get($id, array $options = null)
+    {
+        if (is_string($id)) {
+            $id = (int)$id;
+        } elseif (!is_int($id)) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->byId($id);
+    }
+
     /**
      * @param array|string $params
      * @param ?string $reason

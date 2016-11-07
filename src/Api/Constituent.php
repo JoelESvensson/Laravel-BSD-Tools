@@ -98,6 +98,5 @@ class Constituent
         } elseif (isset($params['cons_ids'])) {
             return $this->byIds($params);
         }
-
     }
 }

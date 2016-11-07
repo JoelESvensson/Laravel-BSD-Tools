@@ -108,6 +108,24 @@ class Client
         );
     }
 
+    public function countUniqueSubscribers(int $id)
+    {
+        if ($id <= 0) {
+            throw new InvalidArgumentException();
+        }
+
+        $response = $this->get(
+            '/modules/constituent/admin/group_list_ajax_replace.php',
+            [
+                'query' => [
+                    'ajax_replace_id' => 'unique_emails_subscribed,'.$id
+                ],
+            ]
+        );
+        $response = simplexml_load_string((string)$response->getBody());
+        return (int)str_replace(',', '', (string)$response->result);
+    }
+
     public function activeRecurring()
     {
         $data = (new Pipeline)
@@ -150,7 +168,8 @@ class Client
     public function returningForAction(
         DateTime $fromDate,
         DateTime $toDate = null,
-        DateInterval $interval = null
+        DateInterval $interval = null,
+        DateInterval $windowSize = null
     ) {
         if (!$toDate) {
             $toDate = Carbon::now();
@@ -159,9 +178,10 @@ class Client
         if (!$interval) {
             $interval = CarbonInterval::create(0, 1);
         }
+
         return (new Pipeline)
             ->pipe(new ReturningForAction($this, $this->log))
-            ->pipe(new TryCache($this->cache, $this->log))
+            // ->pipe(new TryCache($this->cache, $this->log))
             ->pipe(function (array $parameters) : array {
                 $preparedChunks = array_chunk($parameters['prepared'], 100, true);
                 $result = [
@@ -178,10 +198,10 @@ class Client
                          * ForceCompleteCount will try to fetch the count directly
                          * without waiting. Saves a roundtrip when doing many requests.
                          */
-                        ->pipe(new ForceCompleteCount($this, $this->log))
+                        // ->pipe(new ForceCompleteCount($this, $this->log))
                         ->pipe(new Wait($this, $this->log))
                         ->pipe(new CompleteCount($this, $this->log))
-                        ->pipe(new Cache($this->cache))
+                        // ->pipe(new Cache($this->cache))
                         ->process([
                             'prepared' => $prepared,
                             'completed' => [],
@@ -203,6 +223,7 @@ class Client
                 'fromDate' => $fromDate,
                 'toDate' => $toDate,
                 'interval' => $interval,
+                'windowSize' => $windowSize,
             ]);
     }
 

@@ -83,7 +83,10 @@ class ReturningForAction
         $fromDate = $parameters['fromDate'];
         $toDate = $parameters['toDate'];
         $interval = $parameters['interval'] ?? CarbonInterval::create(0, 0, 0, 1);
+        $windowSize = $parameters['windowSize'] ?? $interval;
+        $fromStep = clone $fromDate;
         $toStep = clone $fromDate;
+        $toStep->add($windowSize);
         $data = [
             'prepared' => [],
             'ongoing' => [],
@@ -91,9 +94,7 @@ class ReturningForAction
             'done' => [],
         ];
         for (;;) {
-            $fromStep = clone $toStep;
-            $toStep->add($interval);
-            if ($toStep->gt($toDate)) {
+            if ($toStep->gte($toDate)) {
                 $data['prepared'][$fromStep->format('Y-m-d')] = [
                     'data' => $this->data(
                         $fromStep,
@@ -110,8 +111,10 @@ class ReturningForAction
                     $toStep
                 )
             ];
+            $fromStep->add($interval);
+            $toStep->add($interval);
         }
-        
+
         return $data;
     }
 }
