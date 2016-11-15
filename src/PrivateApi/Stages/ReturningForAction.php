@@ -97,12 +97,6 @@ class ReturningForAction
         ];
         for (;;) {
             if ($toStep->gte($toDate)) {
-                $data['prepared'][$toStep->format('Y-m-d')] = [
-                    'data' => $this->data(
-                        $fromStep,
-                        $toDate // We don't want to jump over the toDate
-                    ),
-                ];
                 break;
             }
 
