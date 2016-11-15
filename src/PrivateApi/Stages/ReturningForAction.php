@@ -84,6 +84,8 @@ class ReturningForAction
         $toDate = $parameters['toDate'];
         $interval = $parameters['interval'] ?? CarbonInterval::create(0, 0, 0, 1);
         $windowSize = $parameters['windowSize'] ?? $interval;
+
+        $fromDate->sub($windowSize);
         $fromStep = clone $fromDate;
         $toStep = clone $fromDate;
         $toStep->add($windowSize);
@@ -95,17 +97,16 @@ class ReturningForAction
         ];
         for (;;) {
             if ($toStep->gte($toDate)) {
-                $data['prepared'][$fromStep->format('Y-m-d')] = [
+                $data['prepared'][$toStep->format('Y-m-d')] = [
                     'data' => $this->data(
                         $fromStep,
                         $toDate // We don't want to jump over the toDate
                     ),
-                    'cacheDuration' => 60
                 ];
                 break;
             }
 
-            $data['prepared'][$fromStep->format('Y-m-d')] = [
+            $data['prepared'][$toStep->format('Y-m-d')] = [
                 'data' => $this->data(
                     $fromStep,
                     $toStep

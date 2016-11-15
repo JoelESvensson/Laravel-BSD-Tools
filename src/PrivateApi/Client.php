@@ -150,7 +150,6 @@ class Client
                         ->pipe(new ForceCompleteCount($this, $this->log))
                         ->pipe(new Wait($this, $this->log))
                         ->pipe(new CompleteCount($this, $this->log))
-                        ->pipe(new Cache($this->cache))
                         ->process([
                             'prepared' => $prepared,
                             'completed' => [],
@@ -171,7 +170,10 @@ class Client
         DateInterval $interval = null,
         DateInterval $windowSize = null
     ) {
-        if (!$toDate) {
+        $fromDate = clone $fromDate;
+        if ($toDate) {
+            $toDate = clone $toDate;
+        } else {
             $toDate = Carbon::now();
         }
 
@@ -201,7 +203,6 @@ class Client
                         // ->pipe(new ForceCompleteCount($this, $this->log))
                         ->pipe(new Wait($this, $this->log))
                         ->pipe(new CompleteCount($this, $this->log))
-                        // ->pipe(new Cache($this->cache))
                         ->process([
                             'prepared' => $prepared,
                             'completed' => [],

@@ -49,7 +49,6 @@ class BeginCount
                 unset($json);
                 $data['ongoing'][$key] = $value;
                 $data['ongoing'][$key]['data'] = $searchId;
-                $data['ongoing'][$key]['hashKey'] = $value['hashKey'];
                 unset($data['prepared'][$key]);
                 $this->log->debug(
                     'Count has begun',
