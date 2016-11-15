@@ -181,6 +181,13 @@ class Client
             $interval = CarbonInterval::create(0, 1);
         }
 
+        /**
+         * Rturn empty array for impossible query
+         */
+        if ($fromDate->gt($toDate)) {
+            return [];
+        }
+
         return (new Pipeline)
             ->pipe(new ReturningForAction($this, $this->log))
             // ->pipe(new TryCache($this->cache, $this->log))
