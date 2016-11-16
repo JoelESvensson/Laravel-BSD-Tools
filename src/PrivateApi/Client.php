@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JoelESvensson\LaravelBsdTools\PrivateApi;
 
 use Carbon\Carbon;
@@ -126,7 +128,7 @@ class Client
         return (int)str_replace(',', '', (string)$response->result);
     }
 
-    public function activeRecurring()
+    public function activeRecurring(): int
     {
         $data = (new Pipeline)
             ->pipe(new ActiveRecurring($this, $this->log))
@@ -161,7 +163,7 @@ class Client
                 return $result;
             })
             ->process([]);
-        return $data['done'][0]['data'];
+        return (int)$data['done'][0]['data'];
     }
 
     public function returningForAction(
@@ -169,7 +171,7 @@ class Client
         DateTime $toDate = null,
         DateInterval $interval = null,
         DateInterval $windowSize = null
-    ) {
+    ): array {
         $fromDate = clone $fromDate;
         if ($toDate) {
             $toDate = clone $toDate;
