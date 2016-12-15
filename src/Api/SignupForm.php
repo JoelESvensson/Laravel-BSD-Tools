@@ -58,6 +58,19 @@ class SignupForm
         return $this->api->post('signup/process_signup', [], $dom->saveXML());
     }
 
+    public function fields($id)
+    {
+        if (is_string($id)) {
+            $id = (int)$id;
+        } elseif (!is_int($id)) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->api->get('signup/list_form_fields', [
+            'signup_form_id' => $id,
+        ]);
+    }
+
     /**
      * @param array|string $params
      * @param ?string $reason
