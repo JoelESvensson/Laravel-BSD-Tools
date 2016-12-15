@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace JoelESvensson\LaravelBsdTools\Api;
 
 use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
+use DOMDocument;
 
 class SignupForm
 {
@@ -32,6 +33,29 @@ class SignupForm
         }
 
         return $this->byId($id);
+    }
+
+    public function process($id, $fieldData)
+    {
+        if (is_string($id)) {
+            $id = (int)$id;
+        } elseif (!is_int($id)) {
+            throw new InvalidArgumentException();
+        }
+
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $api = $dom->createElement('api');
+        $signupForm = $dom->createElement('signup_form');
+        $signupForm->setAttribute('id', $id);
+        foreach ($fieldData as $key => $value) {
+            $field = $dom->createElement('signup_form_field', $value);
+            $field->setAttribute('id', $key);
+            $signupForm->appendChild($field);
+        }
+
+        $api->appendChild($signupForm);
+        $dom->appendChild($api);
+        return $this->api->post('signup/process_signup', [], $dom->saveXML());
     }
 
     /**
