@@ -43,13 +43,16 @@ class SignupForm
             throw new InvalidArgumentException();
         }
 
+        // Normalize to string
+        $id = (string)$id;
+
         $dom = new DOMDocument('1.0', 'utf-8');
         $api = $dom->createElement('api');
         $signupForm = $dom->createElement('signup_form');
         $signupForm->setAttribute('id', $id);
         foreach ($fieldData as $key => $value) {
             $field = $dom->createElement('signup_form_field', $value);
-            $field->setAttribute('id', $key);
+            $field->setAttribute('id', (string)$key);
             $signupForm->appendChild($field);
         }
 
