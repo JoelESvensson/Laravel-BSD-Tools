@@ -9,15 +9,12 @@ use Carbon\CarbonInterval;
 use DateInterval;
 use DateTime;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Logging\Log;
 use InvalidArgumentException;
-use Namshi\Cuzzle\Middleware\CurlFormatterMiddleware;
-use RuntimeException;
 use JoelESvensson\LaravelBsdTools\PrivateApi\Stages\{ //@codingStandardsIgnoreLine
     ActiveRecurring,
     BeginCount,
@@ -49,13 +46,7 @@ class Client
             return $this->guzzleClient;
         }
 
-        $handler = HandlerStack::create();
-        if ($this->debug) {
-            $handler->after('cookies', new CurlFormatterMiddleware($this->log)); //add the cURL formatter middleware
-        }
-
         $this->guzzleClient = new GuzzleClient([
-            'handler' => $handler,
             'cookies' => $this->cookies,
             'base_uri' => $this->url,
         ]);
@@ -95,15 +86,11 @@ class Client
             return $this->searchSessionKey;
         }
 
-        $body = (string)$this->get('/admin/Constituent/ConsSearch')->getBody();
         $result = preg_match(
             '/(?:'.preg_quote('BSD.cons_search.set_uid("').')(.+?)(?:\\")/',
-            $body,
+            (string)$this->get('/admin/Constituent/ConsSearch')->getBody(),
             $match
         );
-        if (!isset($match[1])) {
-            throw new RuntimeException($body);
-        }
 
         return $this->searchSessionKey = $match[1];
     }
@@ -258,7 +245,6 @@ class Client
         $this->email = $params['PRIVATE_API_EMAIL'];
         $this->password = $params['PRIVATE_API_PASSWORD'];
         $this->url = $params['PRIVATE_API_URL'];
-        $this->debug = $params['PRIVATE_API_CURL_DEBUG'];
         $this->cookies = new CookieJar;
         $this->cache = $cache;
         $this->log = $log;
