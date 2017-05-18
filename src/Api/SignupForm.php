@@ -19,6 +19,16 @@ class SignupForm
         $this->api = $api;
     }
 
+    public function clone(int $from, string $newTitle, string $newName, string $newSlug)
+    {
+        return $this->api->post('signup/clone_form', [
+            'signup_form_id' => $from,
+            'title' => $newTitle,
+            'signup_form_name' => $newName,
+            'slug' => $newSlug,
+        ]);
+    }
+
     private function byId(int $id)
     {
         return $this->api->get('signup/get_form', ['signup_form_id' => $id]);
