@@ -6,7 +6,7 @@ Install the package with composer
 
 Then add
 
-    JoelESvensson\LaravelBsdTools\BsdToolsServiceProvider::class
+    JoelESvensson\LaravelBsdTools\BsdServiceProvider::class
 
 to your list of providers in the app.php config. When this is done you should also publish the bsdtools config file
 
