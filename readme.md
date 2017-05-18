@@ -2,7 +2,7 @@
 
 Install the package with composer
 
-    composer require joelesvensson\bsdtools
+    composer require joelesvensson\laravelbsdtools
 
 Then add
 
