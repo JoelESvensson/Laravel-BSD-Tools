@@ -46,6 +46,21 @@ class ConstituentGroup
         }
     }
 
+
+    public function create(string $name)
+    {
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $api = $dom->createElement('api');
+        $consGroup = $dom->createElement('cons_group');
+
+        $name = $dom->createElement('name', $name);
+        $consGroup->appendChild($name);
+
+        $api->appendChild($consGroup);
+        $dom->appendChild($api);
+        return $this->api->post('cons_group/add_constituent_groups', [], $dom->saveXML());
+    }
+
     /**
      * @param array|string $params
      * @param ?string $reason

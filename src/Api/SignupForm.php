@@ -21,7 +21,7 @@ class SignupForm
 
     public function clone(int $from, string $newTitle, string $newName, string $newSlug)
     {
-        return $this->api->post('signup/clone_form', [
+        return $this->api->post('signup/clone_form', [], [
             'signup_form_id' => $from,
             'title' => $newTitle,
             'signup_form_name' => $newName,
@@ -43,6 +43,18 @@ class SignupForm
         }
 
         return $this->byId($id);
+    }
+
+    public function setConstituentGroup(int $formId, int $constituentGroupId)
+    {
+        return $this->api->post(
+            'signup/set_cons_group',
+            [
+                'signup_form_id' => $formId,
+            ], [
+                'cons_group_id' => $constituentGroupId,
+            ]
+        );
     }
 
     public function process($id, $fieldData)
