@@ -5,6 +5,7 @@ namespace JoelESvensson\LaravelBsdTools\Api;
 use Blue\Tools\Api\DeferredException;
 use InvalidArgumentException;
 use JoelESvensson\LaravelBsdTools\Api\Client as ApiClient;
+use DOMDocument;
 
 class ConstituentGroup
 {
@@ -47,7 +48,7 @@ class ConstituentGroup
     }
 
 
-    public function create(string $name)
+    public function create(string $name, string $slug)
     {
         $dom = new DOMDocument('1.0', 'utf-8');
         $api = $dom->createElement('api');
@@ -55,6 +56,9 @@ class ConstituentGroup
 
         $name = $dom->createElement('name', $name);
         $consGroup->appendChild($name);
+
+        $slug = $dom->createElement('slug', $slug);
+        $consGroup->appendChild($slug);
 
         $api->appendChild($consGroup);
         $dom->appendChild($api);
